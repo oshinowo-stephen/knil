@@ -1,4 +1,4 @@
-#[cfg(feature = "dotenv")]
+#[cfg(feature = "env")]
 pub fn load(path: Option<&Path>) {
 	if let Some(p) = path {
 		if let Err(error) = dotenv::dotenv(p) {

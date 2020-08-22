@@ -2,7 +2,7 @@
 extern crate chrono;
 #[cfg(feature = "colored")]
 extern crate colored;
-#[cfg(feature = "dotenv")]
+#[cfg(feature = "env")]
 extern crate dotenv;
 extern crate log;
 
@@ -11,7 +11,7 @@ mod envloader;
 
 pub use modules::{Knil, LogResult};
 
-#[cfg(feature = "dotenv")]
+#[cfg(feature = "env")]
 pub fn construct(
 	verbose: Option<u8>,
 	env_path: Option<&Path>
@@ -28,7 +28,7 @@ pub fn construct(
 	log::set_boxed_logger(Box::new(logger))
 }
 
-#[cfg(not(feature = "dotenv"))]
+#[cfg(not(feature = "env"))]
 pub fn construct(verbose: Option<u8>) -> LogResult<()> {
 	let logger = match verbose {
 		Some (v) => Knil::new(v),
@@ -39,10 +39,3 @@ pub fn construct(verbose: Option<u8>) -> LogResult<()> {
 	log::set_boxed_logger(Box::new(logger))
 }
 
-#[cfg(test)]
-mod tests {
-	#[test]
-	fn it_works() {			
-		assert_eq!(2 + 2, 4);
-	}
-}

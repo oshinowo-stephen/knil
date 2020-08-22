@@ -8,8 +8,10 @@ edition = "2018"
 
 [features]
 default = ["timestamp", "colors"]
-timestamp = ["chrono"]
+
+env = ["dotenv"]
 colors = ["colored"]
+timestamp = ["chrono"]
 
 [dependencies]
 log = { version = "0.4", features = ["std"] }
@@ -20,4 +22,8 @@ optional = true
 
 [dependencies.colored]
 version = "2"
+optional = true
+
+[dependencies.dotenv]
+version = "0.15"
 optional = true
