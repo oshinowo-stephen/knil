@@ -10,7 +10,7 @@ pub struct Knil(pub LevelFilter);
 
 impl log::Log for Knil {
 	fn enabled(&self, m: &Metadata) -> bool {
-		self.0 <= m.level()
+		m.level() <= self.0
 	}
 
 	fn log(&self, r: &Record) {
@@ -32,6 +32,14 @@ impl log::Log for Knil {
 			} else {
 				r.module_path().unwrap_or_default()
 			};
+			
+			#[cfg(not(feature = "timestamp"))]
+			println!(
+				"({}) \"{}\" -> {}",
+				lvl_str,
+				target,
+				r.args(),
+			);
 
 			#[cfg(feature = "timestamp")]
 			println!(
@@ -40,7 +48,7 @@ impl log::Log for Knil {
 				lvl_str,
 				target,
 				r.args(),
-			)
+			);
 		}
 	}
 

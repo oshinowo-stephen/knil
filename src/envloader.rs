@@ -1,12 +1,15 @@
-#[cfg(feature = "env")]
+#[cfg(feature = "env-loader")]
+use std::path::Path;
+
+#[cfg(feature = "env-loader")]
 pub fn load(path: Option<&Path>) {
 	if let Some(p) = path {
-		if let Err(error) = dotenv::dotenv(p) {
-			warn!("unable to load from that path")
+		if let Err(error) = dotenv::from_path(p) {
+			eprintln!("unable to load from that path")
 		}
 	} else {
 		if let Err(error) = dotenv::dotenv() {
-				warn!("unable to load from .env")
+			eprintln!("unable to load from .env")
 		}
 	}
 }
@@ -14,12 +17,12 @@ pub fn load(path: Option<&Path>) {
 pub fn fetch_env () -> u8 {
 	if let Ok(e) = std::env::var("RUST_ENV") {
 		if e != "production" {
-			4
+			3
 		} else {
-			1
+			0
 		}
 	} else {
-		5
+		69
 	}
 }
 

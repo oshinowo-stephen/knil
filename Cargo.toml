@@ -6,10 +6,14 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[test]]
+name = "basic"
+path = "tests/basic.rs"
+
 [features]
 default = ["timestamp", "colors"]
 
-env = ["dotenv"]
+env-loader = ["dotenv"]
 colors = ["colored"]
 timestamp = ["chrono"]
 
