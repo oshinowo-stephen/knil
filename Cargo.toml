@@ -13,9 +13,10 @@ path = "tests/basic.rs"
 [features]
 default = ["timestamp", "colors"]
 
-env-loader = ["dotenv"]
+file-log = []
 colors = ["colored"]
 timestamp = ["chrono"]
+dotenv-loader = ["dotenv"]
 
 [dependencies]
 log = { version = "0.4", features = ["std"] }

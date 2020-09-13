@@ -2,7 +2,7 @@
 extern crate chrono;
 #[cfg(feature = "colored")]
 extern crate colored;
-#[cfg(feature = "env-loader")]
+#[cfg(feature = "dotenv-loader")]
 extern crate dotenv;
 extern crate log;
 
@@ -11,19 +11,26 @@ mod envloader;
 
 pub use modules::{Knil, LogResult};
 
-#[cfg(feature = "env-loader")]
+#[cfg(feature = "dotenv-loader")]
 use std::path::Path;
+use std::env;
 
-#[cfg(feature = "env-loader")]
-pub fn construct(
-	verbose: Option<u8>,
-	env_path: Option<&Path>
+#[cfg(feature = "dotenv-loader")]
+pub fn construct (
+	path: Option<&Path>
 ) -> LogResult<()> {
+	if let Some (p) = path {
+		dotenv::from_path(p);
+	}	else {
+		dotenv::dotenv().ok();
+	}
+
+	let verbose = env::var("KNIL_VERBOSE");
+
 	let logger = match verbose {
-		Some (v) => Knil::new(v),
-		None => {
-			envloader::load(env_path);
-			Knil::new(envloader::fetch_env())
+		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
+		Err(error) => match error {
+			_ => Knil::new(envloader::fetch_env())
 		}
 	};
 
@@ -31,14 +38,17 @@ pub fn construct(
 	log::set_boxed_logger(Box::new(logger))
 }
 
-#[cfg(not(feature = "env-loader"))]
-pub fn construct(verbose: Option<u8>) -> LogResult<()> {
+#[cfg(not(feature = "dotenv-loader"))]
+pub fn construct () -> LogResult<()> {
+	let verbose = env::var("KNIL_VERBOSE");
+
 	let logger = match verbose {
-		Some (v) => Knil::new(v),
-		None => Knil::new(envloader::fetch_env())
+		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
+		Err(error) => match error {
+			_ => Knil::new(envloader::fetch_env())
+		}
 	};
 
 	log::set_max_level(logger.0);
 	log::set_boxed_logger(Box::new(logger))
 }
-
