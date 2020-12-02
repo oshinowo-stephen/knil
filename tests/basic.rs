@@ -2,15 +2,15 @@
 extern crate log;
 extern crate knil;
 
-#[cfg(feature = "dotenv-loader")]
+#[cfg(feature = "envload")]
 use std::path::Path;
 
 #[test]
 fn log_basic () {
-	#[cfg(feature = "dotenv-loader")]
+	#[cfg(feature = "envload")]
 	knil::construct(Some(Path::new("test.env"))).ok();
 
-	#[cfg(not(feature = "dotenv-loader"))]
+	#[cfg(not(feature = "envload"))]
 	knil::construct().ok();
 
 	info!("Print for loader...");

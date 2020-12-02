@@ -24,6 +24,7 @@ fn main () {
 ```
 
 ## Using with dotenv 
+
 ```toml
 [dependencies]
 log = "0.4"

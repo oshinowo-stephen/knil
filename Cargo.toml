@@ -2,6 +2,15 @@
 name = "knil"
 version = "0.1.0"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
+description = "A simple logger for my cases, others can use though."
+include = [
+	"src/*.rs",
+	"Cargo.toml",
+]
+repository = "https://github.com/whoastonic/knil.git"
+documentation = "https://docs.rs/knil"
+readme = "README.md"
+license = "MIT"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -16,7 +25,7 @@ default = ["timestamp", "colors"]
 file-log = []
 colors = ["colored"]
 timestamp = ["chrono"]
-dotenv-loader = ["dotenv"]
+envload = ["dotenv"]
 
 [dependencies]
 log = { version = "0.4", features = ["std"] }

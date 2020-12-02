@@ -2,7 +2,7 @@
 extern crate chrono;
 #[cfg(feature = "colored")]
 extern crate colored;
-#[cfg(feature = "dotenv-loader")]
+#[cfg(feature = "envload")]
 extern crate dotenv;
 extern crate log;
 
@@ -11,11 +11,11 @@ mod envloader;
 
 pub use modules::{Knil, LogResult};
 
-#[cfg(feature = "dotenv-loader")]
+#[cfg(feature = "envload")]
 use std::path::Path;
 use std::env;
 
-#[cfg(feature = "dotenv-loader")]
+#[cfg(feature = "envload")]
 pub fn construct (
 	path: Option<&Path>
 ) -> LogResult<()> {
@@ -38,7 +38,7 @@ pub fn construct (
 	log::set_boxed_logger(Box::new(logger))
 }
 
-#[cfg(not(feature = "dotenv-loader"))]
+#[cfg(not(feature = "envload"))]
 pub fn construct () -> LogResult<()> {
 	let verbose = env::var("KNIL_VERBOSE");
 
