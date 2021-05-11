@@ -1,43 +1,31 @@
 [package]
 name = "knil"
-version = "0.1.0"
+license = "MIT"
+edition = "2018"
+version = "0.1.1"
+readme = "README.md"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
-description = "A simple logger for my cases, others can use though."
+description = "An environment based logger, built with simplicity in mind."
 include = [
 	"src/*.rs",
 	"Cargo.toml",
 ]
-repository = "https://github.com/whoastonic/knil.git"
 documentation = "https://docs.rs/knil"
-readme = "README.md"
-license = "MIT"
-edition = "2018"
+repository = "https://github.com/whoastonic/knil.git"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[[test]]
-name = "basic"
-path = "tests/basic.rs"
-
 [features]
-default = ["timestamp", "colors"]
+default = ["colors", "stamps"]
 
-file-log = []
+stamps = ["chrono"]
 colors = ["colored"]
-timestamp = ["chrono"]
-envload = ["dotenv"]
 
 [dependencies]
-log = { version = "0.4", features = ["std"] }
+dotenv = { version = "0.15" }
+colored = { version = "2", optional = true }
+chrono = { version = "0.4", optional = true }
 
-[dependencies.chrono]
-version = "0.4.15"
-optional = true
-
-[dependencies.colored]
-version = "2"
-optional = true
-
-[dependencies.dotenv]
-version = "0.15"
-optional = true
+[dependencies.log]
+version = "0.4"
+features = ["std"]

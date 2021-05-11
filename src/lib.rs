@@ -1,54 +1,34 @@
-#[cfg(feature = "timestamp")]
-extern crate chrono;
-#[cfg(feature = "colored")]
-extern crate colored;
-#[cfg(feature = "envload")]
-extern crate dotenv;
 extern crate log;
+#[cfg(feature = "stamps")]
+extern crate chrono;
+#[cfg(feature = "loadenv")]
+extern crate dotenv;
+#[cfg(feature = "colors")]
+extern crate colored;
 
-mod modules;
-mod envloader;
+mod env;
+mod logger;
 
-pub use modules::{Knil, LogResult};
+#[cfg(feature = "loadenv")]
+pub fn init (p: &str) -> Result<(), log::SetLoggerError> {
+	let level = env::read_env(if p.len() { None } else { Some(p) });
 
-#[cfg(feature = "envload")]
-use std::path::Path;
-use std::env;
+	let knil = Box::new(logger::Knil::new(level));
 
-#[cfg(feature = "envload")]
-pub fn construct (
-	path: Option<&Path>
-) -> LogResult<()> {
-	if let Some (p) = path {
-		dotenv::from_path(p);
-	}	else {
-		dotenv::dotenv().ok();
-	}
+	log::set_boxed_logger(knil);
+	log::set_max_level(log::LevelFilter::Trace);
 
-	let verbose = env::var("KNIL_VERBOSE");
-
-	let logger = match verbose {
-		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
-		Err(error) => match error {
-			_ => Knil::new(envloader::fetch_env())
-		}
-	};
-
-	log::set_max_level(logger.0);
-	log::set_boxed_logger(Box::new(logger))
+	Ok(())
 }
 
-#[cfg(not(feature = "envload"))]
-pub fn construct () -> LogResult<()> {
-	let verbose = env::var("KNIL_VERBOSE");
+#[cfg(not(feature = "loadenv"))]
+pub fn init () -> Result<(), log::SetLoggerError> {
+	let level = env::read_env().expect("cannot read env.");
 
-	let logger = match verbose {
-		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
-		Err(error) => match error {
-			_ => Knil::new(envloader::fetch_env())
-		}
-	};
+	let knil = Box::new(logger::Knil::new(level));
 
-	log::set_max_level(logger.0);
-	log::set_boxed_logger(Box::new(logger))
+	log::set_boxed_logger(knil)?;
+	log::set_max_level(log::LevelFilter::Trace);
+
+	Ok(())
 }
