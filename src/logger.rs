@@ -1,29 +1,23 @@
 #[cfg(feature = "colors")]
 use colored::*;
 
-fn get_lvl_str (lvl: log::Level) -> String {
+fn get_lvl_str(lvl: log::Level) -> String {
 	#[cfg(feature = "colors")]
-	let lvl_str = match	lvl {
-		log::Level::Info =>
-			lvl.to_string().cyan(),
-		log::Level::Warn =>
-			lvl.to_string().yellow(),
-		log::Level::Error =>
-			lvl.to_string().red(),
-		log::Level::Debug =>
-			lvl.to_string().purple(),
-		log::Level::Trace =>
-			lvl.to_string().normal(),
+	let lvl_str = match lvl {
+		log::Level::Info => lvl.to_string().cyan(),
+		log::Level::Warn => lvl.to_string().yellow(),
+		log::Level::Error => lvl.to_string().red(),
+		log::Level::Debug => lvl.to_string().purple(),
+		log::Level::Trace => lvl.to_string().normal(),
 	};
-	
+
 	#[cfg(not(feature = "colors"))]
 	let lvl_str = lvl;
-
 
 	lvl_str.to_string()
 }
 
-fn map_to_level (int: usize) -> log::LevelFilter {
+fn map_to_level(int: usize) -> log::LevelFilter {
 	match int {
 		0 => log::LevelFilter::Error,
 		1 => log::LevelFilter::Warn,
@@ -34,24 +28,19 @@ fn map_to_level (int: usize) -> log::LevelFilter {
 }
 
 pub struct Knil {
-
-	level: usize
-
+	level: usize,
 }
 
 impl Knil {
-	
-	pub fn new (level: usize) -> Self {
+	pub fn new(level: usize) -> Self {
 		Self { level }
 	}
-
 }
 
 impl log::Log for Knil {
+	fn flush(&self) {}
 
-	fn flush (&self) {}
-
-	fn log (&self, r: &log::Record) {
+	fn log(&self, r: &log::Record) {
 		let lvl_str = get_lvl_str(r.level());
 
 		let target = if !r.target().is_empty() {
@@ -73,17 +62,10 @@ impl log::Log for Knil {
 		);
 
 		#[cfg(not(feature = "stamps"))]
-		println!(
-			"({}) \"{}\" | {}",
-			lvl_str,
-			target,
-			r.args(),
-		);
+		println!("({}) \"{}\" | {}", lvl_str, target, r.args(),);
 	}
 
 	fn enabled(&self, m: &log::Metadata) -> bool {
-		m.level() <= map_to_level(self.level) 
+		m.level() <= map_to_level(self.level)
 	}
-
 }
-
