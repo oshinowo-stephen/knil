@@ -1,54 +1,52 @@
-#[cfg(feature = "timestamp")]
+#[cfg(feature = "stamps")]
 extern crate chrono;
-#[cfg(feature = "colored")]
+#[cfg(feature = "colors")]
 extern crate colored;
-#[cfg(feature = "envload")]
+#[cfg(feature = "loadenv")]
 extern crate dotenv;
 extern crate log;
 
-mod modules;
-mod envloader;
+mod env;
+mod logger;
 
-pub use modules::{Knil, LogResult};
+#[cfg(feature = "loadenv")]
 
-#[cfg(feature = "envload")]
-use std::path::Path;
-use std::env;
+/// Using it with dotenv~
+///
+///```rust
+///init("path/to/.env")?;
+///
+///info!("Hello, World!")
+///```
 
-#[cfg(feature = "envload")]
-pub fn construct (
-	path: Option<&Path>
-) -> LogResult<()> {
-	if let Some (p) = path {
-		dotenv::from_path(p);
-	}	else {
-		dotenv::dotenv().ok();
-	}
+pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
+	let level = env::read_env(if p.len() { None } else { Some(p) });
 
-	let verbose = env::var("KNIL_VERBOSE");
+	let knil = Box::new(logger::Knil::new(level));
 
-	let logger = match verbose {
-		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
-		Err(error) => match error {
-			_ => Knil::new(envloader::fetch_env())
-		}
-	};
+	log::set_boxed_logger(knil);
+	log::set_max_level(log::LevelFilter::Trace);
 
-	log::set_max_level(logger.0);
-	log::set_boxed_logger(Box::new(logger))
+	Ok(())
 }
 
-#[cfg(not(feature = "envload"))]
-pub fn construct () -> LogResult<()> {
-	let verbose = env::var("KNIL_VERBOSE");
+#[cfg(not(feature = "loadenv"))]
 
-	let logger = match verbose {
-		Ok(v) => Knil::new(v.parse::<u8>().unwrap()),
-		Err(error) => match error {
-			_ => Knil::new(envloader::fetch_env())
-		}
-	};
+/// Getting started with `Knil`!
+///
+///```rust
+///knil::init()?;
+///
+///info!("Hello, World!")
+///```
 
-	log::set_max_level(logger.0);
-	log::set_boxed_logger(Box::new(logger))
+pub fn init() -> Result<(), log::SetLoggerError> {
+	let level = env::read_env().expect("cannot read env.");
+
+	let knil = Box::new(logger::Knil::new(level));
+
+	log::set_boxed_logger(knil)?;
+	log::set_max_level(log::LevelFilter::Trace);
+
+	Ok(())
 }
