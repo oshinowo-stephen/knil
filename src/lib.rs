@@ -10,6 +10,15 @@ mod env;
 mod logger;
 
 #[cfg(feature = "loadenv")]
+
+/// Using it with dotenv~
+///
+///```rust
+///init("path/to/.env")?;
+///
+///info!("Hello, World!")
+///```
+
 pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
 	let level = env::read_env(if p.len() { None } else { Some(p) });
 
@@ -21,15 +30,16 @@ pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
 	Ok(())
 }
 
+#[cfg(not(feature = "loadenv"))]
+
 /// Getting started with `Knil`!
 ///
 ///```rust
-///knil::init()
+///knil::init()?;
 ///
 ///info!("Hello, World!")
 ///```
 
-#[cfg(not(feature = "loadenv"))]
 pub fn init() -> Result<(), log::SetLoggerError> {
 	let level = env::read_env().expect("cannot read env.");
 
