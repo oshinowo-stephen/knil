@@ -2,7 +2,7 @@
 name = "knil"
 license = "MIT"
 edition = "2018"
-version = "0.1.1"
+version = "0.1.2"
 readme = "README.md"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
 description = "An environment based logger, built with simplicity in mind."
