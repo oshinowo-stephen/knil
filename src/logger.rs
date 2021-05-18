@@ -17,7 +17,7 @@ fn get_lvl_str(lvl: log::Level) -> String {
 	lvl_str.to_string()
 }
 
-fn map_to_level(int: usize) -> log::LevelFilter {
+pub fn map_to_level(int: usize) -> log::LevelFilter {
 	match int {
 		0 => log::LevelFilter::Error,
 		1 => log::LevelFilter::Warn,

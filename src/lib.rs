@@ -14,9 +14,9 @@ mod logger;
 /// Using it with dotenv~
 ///
 ///```rust
-///init("path/to/.env")?;
+///init("path/to/.env").unwrap();
 ///
-///info!("Hello, World!")
+///log::info("Hello, World!")
 ///```
 
 pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
@@ -24,8 +24,11 @@ pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
 
 	let knil = Box::new(logger::Knil::new(level));
 
-	log::set_boxed_logger(knil);
-	log::set_max_level(log::LevelFilter::Trace);
+	log::set_boxed_logger(knil)?;
+
+	let max_lvl = logger::map_to_level(level);
+
+	log::set_max_level(max_lvl);
 
 	Ok(())
 }
@@ -33,11 +36,11 @@ pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
 #[cfg(not(feature = "loadenv"))]
 
 /// Getting started with `Knil`!
-///
+/// 
 ///```rust
-///knil::init()?;
+///knil::init().unwrap();
 ///
-///info!("Hello, World!")
+///log::info!("Hello, World!")
 ///```
 
 pub fn init() -> Result<(), log::SetLoggerError> {
@@ -46,7 +49,10 @@ pub fn init() -> Result<(), log::SetLoggerError> {
 	let knil = Box::new(logger::Knil::new(level));
 
 	log::set_boxed_logger(knil)?;
-	log::set_max_level(log::LevelFilter::Trace);
+
+	let max_lvl = logger::map_to_level(level);
+
+	log::set_max_level(max_lvl);
 
 	Ok(())
 }
