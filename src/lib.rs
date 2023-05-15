@@ -1,11 +1,3 @@
-#[cfg(feature = "stamps")]
-extern crate chrono;
-#[cfg(feature = "colors")]
-extern crate colored;
-#[cfg(feature = "loadenv")]
-extern crate dotenv;
-extern crate log;
-
 mod env;
 mod logger;
 
@@ -19,8 +11,8 @@ mod logger;
 ///log::info("Hello, World!")
 ///```
 
-pub fn init(p: &str) -> Result<(), log::SetLoggerError> {
-	let level = env::read_env(if p.len() { None } else { Some(p) });
+pub fn init(p: Option<&str>) -> Result<(), log::SetLoggerError> {
+	let level = env::read_env(p);
 
 	let knil = Box::new(logger::Knil::new(level));
 
@@ -56,3 +48,4 @@ pub fn init() -> Result<(), log::SetLoggerError> {
 
 	Ok(())
 }
+

@@ -27,8 +27,9 @@ fn parse_env(e: &str) -> io::Result<usize> {
 		Err(_) => match e.to_lowercase().as_str() {
 			"minimum" | "min" => Ok(0_usize),
 			"maximum" | "max" => Ok(4_usize),
-			"development" | "dev" => Ok(2_usize),
-			"production" | "prod" => Ok(1_usize),
+			"staging" | "stage" => Ok(3_usize),
+			"production" | "prod" => Ok(2_usize),
+			"development" | "dev" => Ok(4_usize),
 			_ => Err(io::Error::new(
 				io::ErrorKind::Other,
 				"Invalid environment level.",

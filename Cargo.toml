@@ -2,7 +2,7 @@
 name = "knil"
 license = "MIT"
 edition = "2018"
-version = "0.1.2"
+version = "0.1.3"
 readme = "README.md"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
 description = "An environment based logger, built with simplicity in mind."
@@ -20,12 +20,13 @@ default = ["colors", "stamps"]
 
 stamps = ["chrono"]
 colors = ["colored"]
+loadenv = []
 
 [dependencies]
-dotenv = { version = "0.15" }
-colored = { version = "2", optional = true }
-chrono = { version = "0.4", optional = true }
+dotenv = { version = "^0.15" }
+colored = { version = "^2", optional = true }
+chrono = { version = "^0.4", optional = true }
 
 [dependencies.log]
-version = "0.4"
+version = "^0.4"
 features = ["std"]
